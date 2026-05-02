@@ -19,6 +19,8 @@ class AppStrings {
   static const thisMonth = '本月';
   static const categoryOverview = '分类概览';
   static const spendingTrend = '支出趋势';
+  static const emptyCategoryStats = '本月还没有支出记录，暂无分类统计。';
+  static const emptyTrendStats = '本月还没有支出记录，暂无支出趋势。';
   static const addTransactionTitle = '新增记录';
   static const amount = '金额';
   static const category = '分类';
@@ -36,7 +38,7 @@ class AppStrings {
   static const categorySettings = '分类设置';
   static const dataSettings = '数据设置';
   static const appVersion = '版本';
-  static const versionName = 'V0.5 记一笔流程版';
+  static const versionName = 'V0.6 统计分析版';
   static const localLedger = '本地账本';
   static const defaultCategoryPreview = '默认分类预览';
   static const localStorageEnabled = 'Hive 本地存储';

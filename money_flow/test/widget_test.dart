@@ -22,7 +22,7 @@ void main() {
     expect(staticCategoryFor(staticTransactions.first).name, '餐饮');
   });
 
-  testWidgets('shows the V0.5 MoneyFlow app shell', (tester) async {
+  testWidgets('shows the V0.6 MoneyFlow app shell', (tester) async {
     await tester.pumpWidget(MoneyFlowApp(transactionRepository: repository));
     await tester.pumpAndSettle();
 
@@ -47,6 +47,27 @@ void main() {
 
     expect(find.text(AppStrings.allRecords), findsOneWidget);
     expect(find.text('工资'), findsWidgets);
+  });
+
+  testWidgets('shows statistics from real transactions', (tester) async {
+    await tester.pumpWidget(MoneyFlowApp(transactionRepository: repository));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppStrings.statistics));
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.categoryOverview), findsOneWidget);
+    expect(find.text('¥12800.00'), findsOneWidget);
+    expect(find.text('¥66.00'), findsWidgets);
+    expect(find.text('¥12734.00'), findsOneWidget);
+    expect(find.text('¥60.00'), findsOneWidget);
+
+    await tester.drag(find.byType(ListView).last, const Offset(0, -500));
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.spendingTrend), findsOneWidget);
+    expect(find.text('¥22.00'), findsOneWidget);
+    expect(find.text('¥44.00'), findsOneWidget);
   });
 
   testWidgets('saves a valid transaction through repository', (tester) async {

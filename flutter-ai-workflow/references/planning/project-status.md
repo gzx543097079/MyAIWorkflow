@@ -13,7 +13,8 @@
 | V0.3 领域模型版 | 已完成 | Transaction、Category、TransactionType 已定义，UI 已使用类型明确的领域模型 |
 | V0.4 本地存储版 | 已完成 | 已选择 Hive，交易记录可本地保存、加载和删除，iOS/Android 模拟器运行通过 |
 | V0.5 记一笔流程版 | 已完成 | 完整记一笔表单、金额校验、分类/日期/备注输入和保存后数据刷新已完成 |
-| V0.6 统计分析版 | 下一步 | 需要让统计页使用真实交易数据展示月度和分类洞察 |
+| V0.6 统计分析版 | 已完成 | 统计页已使用真实交易数据展示月度汇总、分类支出和每日趋势 |
+| V0.7 分类管理版 | 下一步 | 需要支持用户新增、编辑和删除收入/支出分类 |
 
 ## V0.1 完成记录
 
@@ -34,6 +35,8 @@
 - `dart format lib test`：通过。
 - `flutter analyze`：通过。
 - `flutter test`：通过。
+- iOS 模拟器 `iPhone 17` 运行：通过。
+- Android 模拟器 `emulator-5554` 运行：通过。
 - iOS 模拟器运行：通过。
 - Android 模拟器运行：通过。
 - Android debug APK 构建：通过。
@@ -63,17 +66,37 @@ d64ef46 chore: initialize flutter workflow and app
 - iOS 模拟器 `iPhone 17` 运行：通过。
 - Android 模拟器 `emulator-5554` 运行：通过。
 
+## V0.6 完成记录
+
+完成内容：
+- 新增 `MonthlyStatistics` 领域模型。
+- 统计页的月度收入、支出和结余来自真实交易记录。
+- 分类支出统计按本月真实支出汇总，并按金额降序展示。
+- 每日支出趋势按本月真实支出记录动态生成。
+- 统计页加入无分类统计和无趋势数据的空状态。
+- 更新设置页版本名为 `V0.6 统计分析版`。
+- 新增统计逻辑单元测试。
+- 更新 widget 测试，覆盖真实统计数据展示。
+
+验证结果：
+- `dart format lib test`：通过。
+- `flutter analyze`：通过。
+- `flutter test`：通过。
+- iOS 模拟器 `iPhone 17` 运行：通过。
+- Android 模拟器 `emulator-5554` 运行：通过。
+
 ## 下一次开始位置
 
-从 V0.6 开始。
+从 V0.7 开始。
 
-目标：让统计页展示来自真实交易记录的分析结果。
+目标：允许用户自定义收入和支出分类。
 
 优先任务：
-1. 计算月度收入、支出和结余。
-2. 计算分类支出占比或排行。
-3. 计算每日趋势。
-4. 将统计页改为读取真实交易数据。
-5. 补充统计逻辑测试。
-6. 运行 `dart format lib test`、`flutter analyze`、`flutter test`。
-7. 运行 iOS 模拟器和 Android 模拟器验证。
+1. 建立分类 Repository 或本地存储方案。
+2. 支持默认收入分类和默认支出分类。
+3. 支持新增分类。
+4. 支持编辑分类。
+5. 支持删除分类。
+6. 记一笔流程使用可管理分类。
+7. 运行 `dart format lib test`、`flutter analyze`、`flutter test`。
+8. 运行 iOS 模拟器和 Android 模拟器验证。

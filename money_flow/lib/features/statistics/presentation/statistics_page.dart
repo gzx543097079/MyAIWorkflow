@@ -3,9 +3,9 @@ import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
+import 'package:money_flow/features/statistics/domain/monthly_statistics.dart';
 import 'package:money_flow/features/transaction/data/static_transactions.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
-import 'package:money_flow/features/transaction/domain/transaction_totals.dart';
 
 class StatisticsPage extends StatelessWidget {
   const StatisticsPage({required this.transactions, super.key});
@@ -14,10 +14,12 @@ class StatisticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final income = incomeTotalCents(transactions);
-    final expense = expenseTotalCents(transactions);
-    final balance = income - expense;
-    final categoryTotals = _categoryExpenseTotals();
+    final statistics = MonthlyStatistics(
+      transactions: transactions,
+      referenceDate: DateTime.now(),
+    );
+    final categoryTotals = statistics.categoryExpenseTotals;
+    final dailyTotals = statistics.dailyExpenseTotals;
 
     return SafeArea(
       child: ListView(
@@ -30,7 +32,7 @@ class StatisticsPage extends StatelessWidget {
               Expanded(
                 child: _MetricCard(
                   label: AppStrings.income,
-                  value: MoneyFormatter.yuanFromCents(income),
+                  value: MoneyFormatter.yuanFromCents(statistics.incomeCents),
                   icon: Icons.arrow_downward,
                 ),
               ),
@@ -38,7 +40,7 @@ class StatisticsPage extends StatelessWidget {
               Expanded(
                 child: _MetricCard(
                   label: AppStrings.expense,
-                  value: MoneyFormatter.yuanFromCents(expense),
+                  value: MoneyFormatter.yuanFromCents(statistics.expenseCents),
                   icon: Icons.arrow_upward,
                 ),
               ),
@@ -47,52 +49,37 @@ class StatisticsPage extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           _MetricCard(
             label: AppStrings.balance,
-            value: MoneyFormatter.yuanFromCents(balance),
+            value: MoneyFormatter.yuanFromCents(statistics.balanceCents),
             icon: Icons.account_balance_wallet_outlined,
           ),
           const SizedBox(height: AppSpacing.xxl),
           const _SectionTitle(title: AppStrings.categoryOverview),
           const SizedBox(height: AppSpacing.md),
           _StatisticsCard(
-            child: Column(
-              children: [
-                for (final item in categoryTotals.entries)
-                  _CategoryBar(
-                    label: staticCategoryById(item.key).name,
-                    value: item.value,
-                    maxValue: expense,
+            child: categoryTotals.isEmpty
+                ? const _EmptyStatistics(message: AppStrings.emptyCategoryStats)
+                : Column(
+                    children: [
+                      for (final item in categoryTotals)
+                        _CategoryBar(
+                          label: staticCategoryById(item.categoryId).name,
+                          value: item.amountCents,
+                          maxValue: statistics.expenseCents,
+                        ),
+                    ],
                   ),
-              ],
-            ),
           ),
           const SizedBox(height: AppSpacing.xxl),
           const _SectionTitle(title: AppStrings.spendingTrend),
           const SizedBox(height: AppSpacing.md),
-          const _StatisticsCard(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _TrendBar(label: '04-30', height: 96),
-                _TrendBar(label: '05-01', height: 34),
-                _TrendBar(label: '05-02', height: 54),
-              ],
-            ),
+          _StatisticsCard(
+            child: dailyTotals.isEmpty
+                ? const _EmptyStatistics(message: AppStrings.emptyTrendStats)
+                : _TrendChart(dailyTotals: dailyTotals),
           ),
         ],
       ),
     );
-  }
-
-  Map<String, int> _categoryExpenseTotals() {
-    final totals = <String, int>{};
-    for (final transaction in transactions.where((item) => !item.isIncome)) {
-      totals.update(
-        transaction.categoryId,
-        (value) => value + transaction.amountCents,
-        ifAbsent: () => transaction.amountCents,
-      );
-    }
-    return totals;
   }
 }
 
@@ -171,6 +158,33 @@ class _StatisticsCard extends StatelessWidget {
   }
 }
 
+class _EmptyStatistics extends StatelessWidget {
+  const _EmptyStatistics({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Row(
+      children: [
+        Icon(Icons.insights_outlined, color: colorScheme.primary),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Text(
+            message,
+            style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _CategoryBar extends StatelessWidget {
   const _CategoryBar({
     required this.label,
@@ -226,21 +240,66 @@ class _CategoryBar extends StatelessWidget {
   }
 }
 
+class _TrendChart extends StatelessWidget {
+  const _TrendChart({required this.dailyTotals});
+
+  final List<DailyExpenseTotal> dailyTotals;
+
+  @override
+  Widget build(BuildContext context) {
+    final maxValue = dailyTotals.fold<int>(
+      0,
+      (value, item) => item.amountCents > value ? item.amountCents : value,
+    );
+
+    return SizedBox(
+      height: 160,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          for (final item in dailyTotals)
+            _TrendBar(
+              label: item.monthDayLabel,
+              value: item.amountCents,
+              maxValue: maxValue,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _TrendBar extends StatelessWidget {
-  const _TrendBar({required this.label, required this.height});
+  const _TrendBar({
+    required this.label,
+    required this.value,
+    required this.maxValue,
+  });
 
   final String label;
-  final double height;
+  final int value;
+  final int maxValue;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final ratio = maxValue == 0 ? 0.0 : value / maxValue;
+    final height = 24 + ratio * 76;
 
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Text(
+            MoneyFormatter.yuanFromCents(value),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
           Container(
             height: height,
             width: 28,
