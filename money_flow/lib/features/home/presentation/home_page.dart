@@ -91,7 +91,10 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   for (final transaction in staticTransactions.take(3))
-                    TransactionTile(transaction: transaction),
+                    TransactionTile(
+                      transaction: transaction,
+                      category: staticCategoryFor(transaction),
+                    ),
                 ],
               ),
             ),

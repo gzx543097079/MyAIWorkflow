@@ -1,69 +1,65 @@
-import 'package:flutter/material.dart';
+import 'package:money_flow/features/category/domain/category.dart';
+import 'package:money_flow/features/transaction/domain/transaction.dart';
+import 'package:money_flow/features/transaction/domain/transaction_type.dart';
 
-enum StaticTransactionType { income, expense }
+const staticCategories = [
+  Category(id: 'food', name: '餐饮', type: TransactionType.expense),
+  Category(id: 'transport', name: '交通', type: TransactionType.expense),
+  Category(id: 'housing', name: '居住', type: TransactionType.expense),
+  Category(id: 'salary', name: '收入', type: TransactionType.income),
+];
 
-class StaticTransaction {
-  const StaticTransaction({
-    required this.title,
-    required this.category,
-    required this.amountCents,
-    required this.type,
-    required this.dateLabel,
-    required this.icon,
-  });
-
-  final String title;
-  final String category;
-  final int amountCents;
-  final StaticTransactionType type;
-  final String dateLabel;
-  final IconData icon;
-
-  bool get isIncome => type == StaticTransactionType.income;
-}
-
-const staticTransactions = [
-  StaticTransaction(
+final staticTransactions = [
+  Transaction(
+    id: 'tx-lunch',
     title: '午餐',
-    category: '餐饮',
+    categoryId: 'food',
     amountCents: 3800,
-    type: StaticTransactionType.expense,
-    dateLabel: '05-02',
-    icon: Icons.restaurant_outlined,
+    type: TransactionType.expense,
+    date: DateTime(2026, 5, 2),
+    note: '工作日午餐',
   ),
-  StaticTransaction(
+  Transaction(
+    id: 'tx-subway',
     title: '地铁',
-    category: '交通',
+    categoryId: 'transport',
     amountCents: 600,
-    type: StaticTransactionType.expense,
-    dateLabel: '05-02',
-    icon: Icons.directions_subway_outlined,
+    type: TransactionType.expense,
+    date: DateTime(2026, 5, 2),
   ),
-  StaticTransaction(
+  Transaction(
+    id: 'tx-salary',
     title: '工资',
-    category: '收入',
+    categoryId: 'salary',
     amountCents: 1280000,
-    type: StaticTransactionType.income,
-    dateLabel: '05-01',
-    icon: Icons.payments_outlined,
+    type: TransactionType.income,
+    date: DateTime(2026, 5, 1),
   ),
-  StaticTransaction(
+  Transaction(
+    id: 'tx-coffee',
     title: '咖啡',
-    category: '餐饮',
+    categoryId: 'food',
     amountCents: 2200,
-    type: StaticTransactionType.expense,
-    dateLabel: '05-01',
-    icon: Icons.local_cafe_outlined,
+    type: TransactionType.expense,
+    date: DateTime(2026, 5, 1),
   ),
-  StaticTransaction(
+  Transaction(
+    id: 'tx-rent',
     title: '房租',
-    category: '居住',
+    categoryId: 'housing',
     amountCents: 320000,
-    type: StaticTransactionType.expense,
-    dateLabel: '04-30',
-    icon: Icons.home_outlined,
+    type: TransactionType.expense,
+    date: DateTime(2026, 4, 30),
   ),
 ];
+
+Category staticCategoryById(String id) {
+  return staticCategories.firstWhere((category) => category.id == id);
+}
+
+Category staticCategoryFor(Transaction transaction) {
+  return staticCategoryById(transaction.categoryId);
+}
 
 int staticIncomeTotalCents() {
   return staticTransactions

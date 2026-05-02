@@ -10,7 +10,8 @@
 |---|---|---|
 | V0.1 项目初始化版 | 已完成 | Flutter 项目、iOS/Android 支持、基础首页、主题 token、规范约束、测试和提交已完成 |
 | V0.2 静态 UI 版 | 已完成 | 底部导航、首页、明细、记一笔、统计、设置和静态数据展示已完成 |
-| V0.3 领域模型版 | 下一步 | 需要定义 Transaction、Category、TransactionType，并让 UI 使用类型模型 |
+| V0.3 领域模型版 | 已完成 | Transaction、Category、TransactionType 已定义，UI 已使用类型明确的领域模型 |
+| V0.4 本地存储版 | 下一步 | 需要选择本地存储方案，并持久化交易记录 |
 
 ## V0.1 完成记录
 
@@ -43,13 +44,14 @@ d64ef46 chore: initialize flutter workflow and app
 
 ## 下一次开始位置
 
-从 V0.3 开始。
+从 V0.4 开始。
 
-目标：定义类型明确的记账数据模型。
+目标：把交易记录持久化到本地。
 
 优先任务：
-1. 定义 `Transaction`。
-2. 定义 `Category`。
-3. 定义 `TransactionType`。
-4. 让 UI 使用类型模型，而不是临时静态数据类型。
-5. 运行 `dart format lib test`、`flutter analyze`、`flutter test`。
+1. 选择 Hive、Isar 或 Drift。
+2. 建立 Repository 层。
+3. 支持新增一笔交易。
+4. 支持删除一笔交易。
+5. App 重启后仍能加载记录。
+6. 运行 `dart format lib test`、`flutter analyze`、`flutter test`。

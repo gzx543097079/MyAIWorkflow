@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
-import 'package:money_flow/features/transaction/data/static_transactions.dart';
+import 'package:money_flow/features/category/domain/category.dart';
+import 'package:money_flow/features/transaction/domain/transaction.dart';
 
 class TransactionTile extends StatelessWidget {
-  const TransactionTile({required this.transaction, super.key});
+  const TransactionTile({
+    required this.transaction,
+    required this.category,
+    super.key,
+  });
 
-  final StaticTransaction transaction;
+  final Transaction transaction;
+  final Category category;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class TransactionTile extends StatelessWidget {
             radius: 22,
             backgroundColor: colorScheme.primaryContainer,
             foregroundColor: colorScheme.onPrimaryContainer,
-            child: Icon(transaction.icon, size: 22),
+            child: Icon(_categoryIcon(category.id), size: 22),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -40,7 +46,7 @@ class TransactionTile extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
-                  '${transaction.category} · ${transaction.dateLabel}',
+                  '${category.name} · ${transaction.monthDayLabel}',
                   style: textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -59,5 +65,15 @@ class TransactionTile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  IconData _categoryIcon(String categoryId) {
+    return switch (categoryId) {
+      'food' => Icons.restaurant_outlined,
+      'transport' => Icons.directions_subway_outlined,
+      'housing' => Icons.home_outlined,
+      'salary' => Icons.payments_outlined,
+      _ => Icons.receipt_long_outlined,
+    };
   }
 }

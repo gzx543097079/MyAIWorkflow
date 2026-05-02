@@ -1,8 +1,8 @@
 # 版本状态
 
-当前版本进度：V0.2 已完成。
+当前版本进度：V0.3 已完成。
 
-下一步版本：V0.3 领域模型版。
+下一步版本：V0.4 本地存储版。
 
 ## V0.1 完成项
 
@@ -29,13 +29,27 @@
 - `flutter analyze` 通过。
 - `flutter test` 通过。
 
+## V0.3 完成项
+
+- `Transaction` 领域模型已创建。
+- `Category` 领域模型已创建。
+- `TransactionType` 领域枚举已创建。
+- 静态记账数据已改为使用类型明确的领域模型。
+- UI 已通过 `Transaction` 和 `Category` 展示首页、明细和统计。
+- 金额继续使用分为单位的整数。
+- V0.3 未接数据库。
+- `dart format lib test` 通过。
+- `flutter analyze` 通过。
+- `flutter test` 通过。
+
 ## 下一步
 
-从 V0.3 开始，实现：
+从 V0.4 开始，实现：
 
-- `Transaction`。
-- `Category`。
-- `TransactionType`。
-- UI 使用类型模型，而不是松散数据。
+- 选择本地存储方案。
+- 持久化交易记录。
+- 支持新增一笔交易。
+- 支持删除一笔交易。
+- App 重启后仍能加载记录。
 
-V0.3 阶段仍不接数据库。
+V0.4 阶段开始接入本地数据库。

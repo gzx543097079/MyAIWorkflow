@@ -35,7 +35,10 @@ class RecordsPage extends StatelessWidget {
               child: Column(
                 children: [
                   for (final transaction in staticTransactions)
-                    TransactionTile(transaction: transaction),
+                    TransactionTile(
+                      transaction: transaction,
+                      category: staticCategoryFor(transaction),
+                    ),
                 ],
               ),
             ),

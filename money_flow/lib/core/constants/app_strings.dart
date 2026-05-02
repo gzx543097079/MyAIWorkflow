@@ -24,21 +24,21 @@ class AppStrings {
   static const date = '日期';
   static const note = '备注';
   static const staticPreview = '静态预览';
-  static const staticPreviewMessage = 'V0.2 只展示记账流程界面，不保存数据。';
+  static const staticPreviewMessage = 'V0.3 使用领域模型展示记账流程，暂不保存数据。';
   static const saveRecord = '保存记录';
   static const accountSettings = '账户设置';
   static const categorySettings = '分类设置';
   static const dataSettings = '数据设置';
   static const appVersion = '版本';
-  static const versionName = 'V0.2 静态 UI 版';
+  static const versionName = 'V0.3 领域模型版';
   static const localLedger = '本地账本';
   static const defaultCategoryPreview = '默认分类预览';
-  static const noDatabaseInV02 = 'V0.2 暂不接数据库';
+  static const noDatabaseInCurrentVersion = 'V0.3 暂不接数据库';
   static const previewAmount = '¥38.00';
   static const previewCategory = '餐饮';
   static const previewDate = '2026-05-02';
   static const previewNote = '工作日午餐';
   static const emptyTransactionTitle = '还没有记账记录';
-  static const emptyTransactionMessage = 'V0.2 使用静态数据搭建主界面，后续版本会接入真实新增和本地存储。';
+  static const emptyTransactionMessage = 'V0.3 使用领域模型承载静态数据，后续版本会接入本地存储。';
   static const zeroAmount = '¥0.00';
 }

@@ -54,7 +54,7 @@ class StatisticsPage extends StatelessWidget {
               children: [
                 for (final item in categoryTotals.entries)
                   _CategoryBar(
-                    label: item.key,
+                    label: staticCategoryById(item.key).name,
                     value: item.value,
                     maxValue: expense,
                   ),
@@ -85,7 +85,7 @@ class StatisticsPage extends StatelessWidget {
       (item) => !item.isIncome,
     )) {
       totals.update(
-        transaction.category,
+        transaction.categoryId,
         (value) => value + transaction.amountCents,
         ifAbsent: () => transaction.amountCents,
       );
