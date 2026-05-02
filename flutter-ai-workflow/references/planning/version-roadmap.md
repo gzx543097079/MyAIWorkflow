@@ -4,7 +4,7 @@
 
 ## V0.1 项目初始化版
 
-状态：已完成。详情见 `project-status.md`。
+状态：已完成。详情见 `references/planning/project-status.md`。
 
 目标：创建一个可以在 iOS 和 Android 运行的 Flutter 项目。
 
