@@ -3,7 +3,8 @@ import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
-import 'package:money_flow/features/transaction/data/static_transactions.dart';
+import 'package:money_flow/features/category/domain/category.dart';
+import 'package:money_flow/features/category/domain/category_lookup.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
 import 'package:money_flow/features/transaction/domain/transaction_totals.dart';
 import 'package:money_flow/features/transaction/presentation/widgets/transaction_tile.dart';
@@ -11,11 +12,13 @@ import 'package:money_flow/features/transaction/presentation/widgets/transaction
 class HomePage extends StatelessWidget {
   const HomePage({
     required this.transactions,
+    required this.categories,
     required this.isLoading,
     super.key,
   });
 
   final List<Transaction> transactions;
+  final List<Category> categories;
   final bool isLoading;
 
   @override
@@ -107,7 +110,10 @@ class HomePage extends StatelessWidget {
                           for (final transaction in transactions.take(3))
                             TransactionTile(
                               transaction: transaction,
-                              category: staticCategoryFor(transaction),
+                              category: categoryById(
+                                categories,
+                                transaction.categoryId,
+                              ),
                             ),
                         ],
                       ),

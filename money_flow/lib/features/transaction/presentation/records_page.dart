@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
-import 'package:money_flow/features/transaction/data/static_transactions.dart';
+import 'package:money_flow/features/category/domain/category.dart';
+import 'package:money_flow/features/category/domain/category_lookup.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
 import 'package:money_flow/features/transaction/presentation/widgets/transaction_tile.dart';
 
 class RecordsPage extends StatelessWidget {
   const RecordsPage({
     required this.transactions,
+    required this.categories,
     required this.isLoading,
     required this.onDeleteTransaction,
     super.key,
   });
 
   final List<Transaction> transactions;
+  final List<Category> categories;
   final bool isLoading;
   final Future<void> Function(String id) onDeleteTransaction;
 
@@ -52,7 +55,10 @@ class RecordsPage extends StatelessWidget {
                           for (final transaction in transactions)
                             TransactionTile(
                               transaction: transaction,
-                              category: staticCategoryFor(transaction),
+                              category: categoryById(
+                                categories,
+                                transaction.categoryId,
+                              ),
                               onDelete: () {
                                 _confirmDelete(context, transaction.id);
                               },

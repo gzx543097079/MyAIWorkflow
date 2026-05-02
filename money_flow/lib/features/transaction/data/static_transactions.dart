@@ -1,14 +1,10 @@
+import 'package:money_flow/features/category/data/default_categories.dart';
 import 'package:money_flow/features/category/domain/category.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
 import 'package:money_flow/features/transaction/domain/transaction_totals.dart';
 import 'package:money_flow/features/transaction/domain/transaction_type.dart';
 
-const staticCategories = [
-  Category(id: 'food', name: '餐饮', type: TransactionType.expense),
-  Category(id: 'transport', name: '交通', type: TransactionType.expense),
-  Category(id: 'housing', name: '居住', type: TransactionType.expense),
-  Category(id: 'salary', name: '收入', type: TransactionType.income),
-];
+const staticCategories = defaultCategories;
 
 final staticTransactions = [
   Transaction(

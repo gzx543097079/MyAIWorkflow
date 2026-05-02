@@ -3,14 +3,20 @@ import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
+import 'package:money_flow/features/category/domain/category.dart';
+import 'package:money_flow/features/category/domain/category_lookup.dart';
 import 'package:money_flow/features/statistics/domain/monthly_statistics.dart';
-import 'package:money_flow/features/transaction/data/static_transactions.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
 
 class StatisticsPage extends StatelessWidget {
-  const StatisticsPage({required this.transactions, super.key});
+  const StatisticsPage({
+    required this.transactions,
+    required this.categories,
+    super.key,
+  });
 
   final List<Transaction> transactions;
+  final List<Category> categories;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +68,7 @@ class StatisticsPage extends StatelessWidget {
                     children: [
                       for (final item in categoryTotals)
                         _CategoryBar(
-                          label: staticCategoryById(item.categoryId).name,
+                          label: categoryById(categories, item.categoryId).name,
                           value: item.amountCents,
                           maxValue: statistics.expenseCents,
                         ),

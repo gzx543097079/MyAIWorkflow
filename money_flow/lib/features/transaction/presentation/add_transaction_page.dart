@@ -4,13 +4,17 @@ import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/features/category/domain/category.dart';
-import 'package:money_flow/features/transaction/data/static_transactions.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
 import 'package:money_flow/features/transaction/domain/transaction_type.dart';
 
 class AddTransactionPage extends StatefulWidget {
-  const AddTransactionPage({required this.onSaveTransaction, super.key});
+  const AddTransactionPage({
+    required this.categories,
+    required this.onSaveTransaction,
+    super.key,
+  });
 
+  final List<Category> categories;
   final Future<void> Function(Transaction transaction) onSaveTransaction;
 
   @override
@@ -35,7 +39,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   }
 
   List<Category> get _availableCategories {
-    return staticCategories
+    return widget.categories
         .where((category) => category.type == _selectedType)
         .toList(growable: false);
   }
@@ -55,6 +59,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final availableCategories = _availableCategories;
+    final hasCategories = availableCategories.isNotEmpty;
 
     return SafeArea(
       child: Form(
@@ -121,7 +126,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     const SizedBox(height: AppSpacing.lg),
                     DropdownButtonFormField<String>(
                       key: ValueKey(_selectedType),
-                      initialValue: _effectiveCategoryId,
+                      initialValue: hasCategories ? _effectiveCategoryId : null,
                       decoration: const InputDecoration(
                         labelText: AppStrings.category,
                         prefixIcon: Icon(Icons.category_outlined),
@@ -142,6 +147,18 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                         });
                       },
                     ),
+                    if (!hasCategories) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.categoryRequired,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: AppSpacing.lg),
                     _DateField(
                       selectedDate: _selectedDate,
@@ -162,7 +179,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             ),
             const SizedBox(height: AppSpacing.lg),
             FilledButton.icon(
-              onPressed: _isSaving ? null : _saveTransaction,
+              onPressed: _isSaving || !hasCategories ? null : _saveTransaction,
               icon: _isSaving
                   ? const SizedBox.square(
                       dimension: 18,
@@ -217,7 +234,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       _isSaving = true;
     });
 
-    final category = staticCategoryById(_effectiveCategoryId);
+    final category = _availableCategories.firstWhere(
+      (category) => category.id == _effectiveCategoryId,
+    );
     final note = _noteController.text.trim();
     final now = DateTime.now();
     final transaction = Transaction(
