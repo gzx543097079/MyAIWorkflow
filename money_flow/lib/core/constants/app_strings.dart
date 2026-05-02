@@ -24,10 +24,10 @@ class AppStrings {
   static const category = '分类';
   static const date = '日期';
   static const note = '备注';
-  static const staticPreview = '预览记录';
-  static const staticPreviewMessage = 'V0.4 会保存这条预览记录，完整表单校验将在 V0.5 完成。';
   static const saveRecord = '保存记录';
+  static const savingRecord = '保存中';
   static const recordSaved = '记录已保存';
+  static const amountRequired = '请输入大于 0 的金额';
   static const deleteRecord = '删除记录';
   static const confirmDeleteRecord = '确定删除这条记录吗？';
   static const cancel = '取消';
@@ -36,7 +36,7 @@ class AppStrings {
   static const categorySettings = '分类设置';
   static const dataSettings = '数据设置';
   static const appVersion = '版本';
-  static const versionName = 'V0.4 本地存储版';
+  static const versionName = 'V0.5 记一笔流程版';
   static const localLedger = '本地账本';
   static const defaultCategoryPreview = '默认分类预览';
   static const localStorageEnabled = 'Hive 本地存储';
@@ -45,6 +45,6 @@ class AppStrings {
   static const previewDate = '2026-05-02';
   static const previewNote = '工作日午餐';
   static const emptyTransactionTitle = '还没有记账记录';
-  static const emptyTransactionMessage = '当前没有记录，可以先保存一条预览记录。';
+  static const emptyTransactionMessage = '当前没有记录，可以先去记一笔。';
   static const zeroAmount = '¥0.00';
 }

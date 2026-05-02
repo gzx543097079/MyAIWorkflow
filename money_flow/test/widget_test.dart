@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:money_flow/app.dart';
 import 'package:money_flow/core/constants/app_strings.dart';
@@ -21,7 +22,7 @@ void main() {
     expect(staticCategoryFor(staticTransactions.first).name, '餐饮');
   });
 
-  testWidgets('shows the V0.4 MoneyFlow app shell', (tester) async {
+  testWidgets('shows the V0.5 MoneyFlow app shell', (tester) async {
     await tester.pumpWidget(MoneyFlowApp(transactionRepository: repository));
     await tester.pumpAndSettle();
 
@@ -48,16 +49,22 @@ void main() {
     expect(find.text('工资'), findsWidgets);
   });
 
-  testWidgets('saves a preview transaction through repository', (tester) async {
+  testWidgets('saves a valid transaction through repository', (tester) async {
     await tester.pumpWidget(MoneyFlowApp(transactionRepository: repository));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(AppStrings.addTransaction));
     await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField).first, '12.34');
+    await tester.enterText(find.byType(TextFormField).last, '测试晚餐');
+    await tester.drag(find.byType(ListView).last, const Offset(0, -300));
+    await tester.pumpAndSettle();
     await tester.tap(find.text(AppStrings.saveRecord));
     await tester.pumpAndSettle();
 
     expect(repository.transactions.length, staticTransactions.length + 1);
+    expect(repository.transactions.last.amountCents, 1234);
+    expect(repository.transactions.last.note, '测试晚餐');
     expect(find.text(AppStrings.recordSaved), findsOneWidget);
   });
 }
