@@ -4,17 +4,26 @@ import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
 import 'package:money_flow/features/transaction/data/static_transactions.dart';
+import 'package:money_flow/features/transaction/domain/transaction.dart';
+import 'package:money_flow/features/transaction/domain/transaction_totals.dart';
 import 'package:money_flow/features/transaction/presentation/widgets/transaction_tile.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    required this.transactions,
+    required this.isLoading,
+    super.key,
+  });
+
+  final List<Transaction> transactions;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final income = staticIncomeTotalCents();
-    final expense = staticExpenseTotalCents();
+    final income = incomeTotalCents(transactions);
+    final expense = expenseTotalCents(transactions);
     final balance = income - expense;
 
     return SafeArea(
@@ -80,27 +89,61 @@ class HomePage extends StatelessWidget {
             style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: AppSpacing.md),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: AppRadii.card,
-              border: Border.all(color: colorScheme.outlineVariant),
-            ),
-            child: Padding(
-              padding: AppSpacing.cardPadding,
-              child: Column(
-                children: [
-                  for (final transaction in staticTransactions.take(3))
-                    TransactionTile(
-                      transaction: transaction,
-                      category: staticCategoryFor(transaction),
-                    ),
-                ],
+          if (isLoading)
+            const Center(child: CircularProgressIndicator())
+          else
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: AppRadii.card,
+                border: Border.all(color: colorScheme.outlineVariant),
+              ),
+              child: Padding(
+                padding: AppSpacing.cardPadding,
+                child: transactions.isEmpty
+                    ? const _EmptyRecords()
+                    : Column(
+                        children: [
+                          for (final transaction in transactions.take(3))
+                            TransactionTile(
+                              transaction: transaction,
+                              category: staticCategoryFor(transaction),
+                            ),
+                        ],
+                      ),
               ),
             ),
-          ),
         ],
       ),
+    );
+  }
+}
+
+class _EmptyRecords extends StatelessWidget {
+  const _EmptyRecords();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Column(
+      children: [
+        Icon(Icons.receipt_long_outlined, color: colorScheme.primary, size: 40),
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          AppStrings.emptyTransactionTitle,
+          style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          AppStrings.emptyTransactionMessage,
+          textAlign: TextAlign.center,
+          style: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
     );
   }
 }

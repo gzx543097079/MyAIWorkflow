@@ -1,5 +1,6 @@
 import 'package:money_flow/features/category/domain/category.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
+import 'package:money_flow/features/transaction/domain/transaction_totals.dart';
 import 'package:money_flow/features/transaction/domain/transaction_type.dart';
 
 const staticCategories = [
@@ -62,13 +63,9 @@ Category staticCategoryFor(Transaction transaction) {
 }
 
 int staticIncomeTotalCents() {
-  return staticTransactions
-      .where((transaction) => transaction.isIncome)
-      .fold(0, (sum, transaction) => sum + transaction.amountCents);
+  return incomeTotalCents(staticTransactions);
 }
 
 int staticExpenseTotalCents() {
-  return staticTransactions
-      .where((transaction) => !transaction.isIncome)
-      .fold(0, (sum, transaction) => sum + transaction.amountCents);
+  return expenseTotalCents(staticTransactions);
 }

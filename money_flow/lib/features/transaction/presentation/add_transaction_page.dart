@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
+import 'package:money_flow/features/transaction/domain/transaction.dart';
+import 'package:money_flow/features/transaction/domain/transaction_type.dart';
 
 class AddTransactionPage extends StatelessWidget {
-  const AddTransactionPage({super.key});
+  const AddTransactionPage({required this.onSaveTransaction, super.key});
+
+  final Future<void> Function(Transaction transaction) onSaveTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +79,14 @@ class AddTransactionPage extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           FilledButton.icon(
-            onPressed: () {},
+            onPressed: () async {
+              await onSaveTransaction(_previewTransaction());
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text(AppStrings.recordSaved)),
+                );
+              }
+            },
             icon: const Icon(Icons.check),
             label: const Text(AppStrings.saveRecord),
           ),
@@ -122,6 +133,19 @@ class AddTransactionPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Transaction _previewTransaction() {
+    final now = DateTime.now();
+    return Transaction(
+      id: 'tx-${now.microsecondsSinceEpoch}',
+      title: AppStrings.previewNote,
+      categoryId: 'food',
+      amountCents: 3800,
+      type: TransactionType.expense,
+      date: now,
+      note: AppStrings.previewNote,
     );
   }
 }

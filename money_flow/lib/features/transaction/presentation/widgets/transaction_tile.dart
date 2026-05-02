@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
 import 'package:money_flow/features/category/domain/category.dart';
@@ -8,11 +9,13 @@ class TransactionTile extends StatelessWidget {
   const TransactionTile({
     required this.transaction,
     required this.category,
+    this.onDelete,
     super.key,
   });
 
   final Transaction transaction;
   final Category category;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,14 @@ class TransactionTile extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
+          if (onDelete != null) ...[
+            const SizedBox(width: AppSpacing.xs),
+            IconButton(
+              onPressed: onDelete,
+              icon: const Icon(Icons.delete_outline),
+              tooltip: AppStrings.delete,
+            ),
+          ],
         ],
       ),
     );

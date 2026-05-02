@@ -4,14 +4,18 @@ import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
 import 'package:money_flow/features/transaction/data/static_transactions.dart';
+import 'package:money_flow/features/transaction/domain/transaction.dart';
+import 'package:money_flow/features/transaction/domain/transaction_totals.dart';
 
 class StatisticsPage extends StatelessWidget {
-  const StatisticsPage({super.key});
+  const StatisticsPage({required this.transactions, super.key});
+
+  final List<Transaction> transactions;
 
   @override
   Widget build(BuildContext context) {
-    final income = staticIncomeTotalCents();
-    final expense = staticExpenseTotalCents();
+    final income = incomeTotalCents(transactions);
+    final expense = expenseTotalCents(transactions);
     final balance = income - expense;
     final categoryTotals = _categoryExpenseTotals();
 
@@ -81,9 +85,7 @@ class StatisticsPage extends StatelessWidget {
 
   Map<String, int> _categoryExpenseTotals() {
     final totals = <String, int>{};
-    for (final transaction in staticTransactions.where(
-      (item) => !item.isIncome,
-    )) {
+    for (final transaction in transactions.where((item) => !item.isIncome)) {
       totals.update(
         transaction.categoryId,
         (value) => value + transaction.amountCents,

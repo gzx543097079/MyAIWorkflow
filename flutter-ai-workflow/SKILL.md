@@ -48,6 +48,15 @@ flutter test
 flutter build apk --debug
 ```
 
+每个版本标记完成前，必须在可用模拟器上运行 App：
+
+```bash
+flutter run -d <ios-simulator-device-id> --no-resident
+flutter run -d <android-emulator-device-id> --no-resident
+```
+
+如果模拟器未启动，先使用 `flutter emulators` 查看可用模拟器并启动对应设备。运行结果需要记录到版本状态文档中。
+
 ## 参考文件导航
 
 参考文件按作用分组：

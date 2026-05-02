@@ -36,7 +36,7 @@ class SettingsPage extends StatelessWidget {
               _SettingsTile(
                 icon: Icons.storage_outlined,
                 title: AppStrings.dataSettings,
-                subtitle: AppStrings.noDatabaseInCurrentVersion,
+                subtitle: AppStrings.localStorageEnabled,
               ),
               _SettingsTile(
                 icon: Icons.info_outline,
