@@ -25,7 +25,7 @@ void main() {
     expect(staticCategoryFor(staticTransactions.first).name, '餐饮');
   });
 
-  testWidgets('shows the V0.7 MoneyFlow app shell', (tester) async {
+  testWidgets('shows the V0.8 MoneyFlow app shell', (tester) async {
     await tester.pumpWidget(
       MoneyFlowApp(
         transactionRepository: transactionRepository,

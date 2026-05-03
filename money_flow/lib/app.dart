@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:money_flow/core/constants/app_strings.dart';
+import 'package:money_flow/core/state/app_state_controller.dart';
 import 'package:money_flow/core/theme/app_theme.dart';
 import 'package:money_flow/features/category/data/category_repository.dart';
-import 'package:money_flow/features/category/data/default_categories.dart';
-import 'package:money_flow/features/category/domain/category.dart';
-import 'package:money_flow/features/category/presentation/category_controller.dart';
 import 'package:money_flow/features/home/presentation/home_page.dart';
 import 'package:money_flow/features/settings/presentation/settings_page.dart';
 import 'package:money_flow/features/statistics/presentation/statistics_page.dart';
 import 'package:money_flow/features/transaction/data/transaction_repository.dart';
 import 'package:money_flow/features/transaction/presentation/add_transaction_page.dart';
 import 'package:money_flow/features/transaction/presentation/records_page.dart';
-import 'package:money_flow/features/transaction/presentation/transaction_controller.dart';
 
 class MoneyFlowApp extends StatelessWidget {
   const MoneyFlowApp({
@@ -52,61 +49,52 @@ class _AppShell extends StatefulWidget {
 
 class _AppShellState extends State<_AppShell> {
   int _selectedIndex = 0;
-  late final TransactionController _transactionController;
-  late final CategoryController _categoryController;
+  late final AppStateController _appStateController;
 
   @override
   void initState() {
     super.initState();
-    _transactionController = TransactionController(
-      repository: widget.transactionRepository,
-    )..load();
-    _categoryController = CategoryController(
-      repository: widget.categoryRepository,
+    _appStateController = AppStateController(
+      transactionRepository: widget.transactionRepository,
+      categoryRepository: widget.categoryRepository,
     )..load();
   }
 
   @override
   void dispose() {
-    _transactionController.dispose();
-    _categoryController.dispose();
+    _appStateController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: Listenable.merge([
-        _transactionController,
-        _categoryController,
-      ]),
+      listenable: _appStateController,
       builder: (context, _) {
-        final transactions = _transactionController.transactions;
-        final List<Category> categories = _categoryController.categories.isEmpty
-            ? defaultCategories
-            : _categoryController.categories;
+        final transactions = _appStateController.transactions;
+        final categories = _appStateController.categories;
         final pages = [
           HomePage(
             transactions: transactions,
             categories: categories,
-            isLoading: _transactionController.isLoading,
+            isLoading: _appStateController.isLoadingTransactions,
           ),
           RecordsPage(
             transactions: transactions,
             categories: categories,
-            isLoading: _transactionController.isLoading,
-            onDeleteTransaction: _transactionController.delete,
+            isLoading: _appStateController.isLoadingTransactions,
+            onDeleteTransaction: _appStateController.deleteTransaction,
           ),
           AddTransactionPage(
             categories: categories,
-            onSaveTransaction: _transactionController.add,
+            onSaveTransaction: _appStateController.addTransaction,
           ),
           StatisticsPage(transactions: transactions, categories: categories),
           SettingsPage(
             categories: categories,
-            isLoadingCategories: _categoryController.isLoading,
-            onSaveCategory: _categoryController.save,
-            onDeleteCategory: _categoryController.delete,
+            isLoadingCategories: _appStateController.isLoadingCategories,
+            onSaveCategory: _appStateController.saveCategory,
+            onDeleteCategory: _appStateController.deleteCategory,
           ),
         ];
 

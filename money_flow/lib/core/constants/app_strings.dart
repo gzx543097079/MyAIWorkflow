@@ -50,7 +50,7 @@ class AppStrings {
   static const emptyCategoryMessage = '当前没有分类，可以新增收入或支出分类。';
   static const dataSettings = '数据设置';
   static const appVersion = '版本';
-  static const versionName = 'V0.7 分类管理版';
+  static const versionName = 'V0.8 状态管理重构版';
   static const localLedger = '本地账本';
   static const defaultCategoryPreview = '默认分类预览';
   static const localStorageEnabled = 'Hive 本地存储';
