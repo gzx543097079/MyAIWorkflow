@@ -258,22 +258,35 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       note: note.isEmpty ? null : note,
     );
 
-    await widget.onSaveTransaction(transaction);
-    if (!mounted) {
-      return;
-    }
+    var saved = false;
+    try {
+      await widget.onSaveTransaction(transaction);
+      if (!mounted) {
+        return;
+      }
 
-    _amountController.clear();
-    _noteController.clear();
-    setState(() {
-      _selectedType = TransactionType.expense;
-      _selectedCategoryId = null;
-      _selectedDate = DateTime.now();
-      _isSaving = false;
-    });
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text(AppStrings.recordSaved)));
+      _amountController.clear();
+      _noteController.clear();
+      saved = true;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text(AppStrings.recordSaved)));
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          if (saved) {
+            _selectedType = TransactionType.expense;
+            _selectedCategoryId = null;
+            _selectedDate = DateTime.now();
+          }
+          _isSaving = false;
+        });
+      }
+    }
   }
 }
 

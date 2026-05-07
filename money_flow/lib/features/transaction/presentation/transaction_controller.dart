@@ -18,9 +18,12 @@ class TransactionController extends ChangeNotifier {
   Future<void> load() async {
     _isLoading = true;
     notifyListeners();
-    _transactions = await _repository.loadTransactions();
-    _isLoading = false;
-    notifyListeners();
+    try {
+      _transactions = await _repository.loadTransactions();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> add(Transaction transaction) async {

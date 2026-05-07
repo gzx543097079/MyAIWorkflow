@@ -18,9 +18,12 @@ class CategoryController extends ChangeNotifier {
   Future<void> load() async {
     _isLoading = true;
     notifyListeners();
-    _categories = await _repository.loadCategories();
-    _isLoading = false;
-    notifyListeners();
+    try {
+      _categories = await _repository.loadCategories();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> save(Category category) async {

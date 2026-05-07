@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
+import 'package:money_flow/core/widgets/month_selector.dart';
 import 'package:money_flow/features/category/domain/category.dart';
 import 'package:money_flow/features/category/domain/category_lookup.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
@@ -12,6 +13,9 @@ class RecordsPage extends StatelessWidget {
     required this.transactions,
     required this.categories,
     required this.isLoading,
+    required this.selectedMonth,
+    required this.onPreviousMonth,
+    required this.onNextMonth,
     required this.onDeleteTransaction,
     super.key,
   });
@@ -19,6 +23,9 @@ class RecordsPage extends StatelessWidget {
   final List<Transaction> transactions;
   final List<Category> categories;
   final bool isLoading;
+  final DateTime selectedMonth;
+  final VoidCallback onPreviousMonth;
+  final VoidCallback onNextMonth;
   final Future<void> Function(String id) onDeleteTransaction;
 
   @override
@@ -35,6 +42,12 @@ class RecordsPage extends StatelessWidget {
             style: textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          MonthSelector(
+            month: selectedMonth,
+            onPreviousMonth: onPreviousMonth,
+            onNextMonth: onNextMonth,
           ),
           const SizedBox(height: AppSpacing.lg),
           if (isLoading)
@@ -98,7 +111,16 @@ class RecordsPage extends StatelessWidget {
     );
 
     if (shouldDelete ?? false) {
-      await onDeleteTransaction(id);
+      try {
+        await onDeleteTransaction(id);
+      } catch (_) {
+        return;
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text(AppStrings.recordDeleted)));
+      }
     }
   }
 }

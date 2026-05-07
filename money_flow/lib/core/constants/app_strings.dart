@@ -9,6 +9,8 @@ class AppStrings {
   static const settings = '设置';
   static const loading = '加载中';
   static const monthlyOverview = '本月概览';
+  static const previousMonth = '上个月';
+  static const nextMonth = '下个月';
   static const currentBalance = '当前结余';
   static const income = '收入';
   static const expense = '支出';
@@ -31,7 +33,11 @@ class AppStrings {
   static const recordSaved = '记录已保存';
   static const amountRequired = '请输入大于 0 的金额';
   static const categoryRequired = '请先添加该类型的分类';
+  static const loadFailed = '数据加载失败，请稍后重试';
+  static const operationFailed = '操作失败，请稍后重试';
+  static const retry = '重试';
   static const deleteRecord = '删除记录';
+  static const recordDeleted = '记录已删除';
   static const confirmDeleteRecord = '确定删除这条记录吗？';
   static const cancel = '取消';
   static const delete = '删除';
@@ -50,7 +56,9 @@ class AppStrings {
   static const emptyCategoryMessage = '当前没有分类，可以新增收入或支出分类。';
   static const dataSettings = '数据设置';
   static const appVersion = '版本';
-  static const versionName = 'V0.8 状态管理重构版';
+  static const versionName = 'V0.9 体验优化版';
+  static const appearanceSettings = '外观设置';
+  static const darkMode = '深色模式';
   static const localLedger = '本地账本';
   static const defaultCategoryPreview = '默认分类预览';
   static const localStorageEnabled = 'Hive 本地存储';

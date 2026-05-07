@@ -25,7 +25,7 @@ void main() {
     expect(staticCategoryFor(staticTransactions.first).name, '餐饮');
   });
 
-  testWidgets('shows the V0.8 MoneyFlow app shell', (tester) async {
+  testWidgets('shows the V0.9 MoneyFlow app shell', (tester) async {
     await tester.pumpWidget(
       MoneyFlowApp(
         transactionRepository: transactionRepository,
@@ -144,6 +144,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('购物'), findsOneWidget);
+  });
+
+  testWidgets('toggles dark mode from settings', (tester) async {
+    await tester.pumpWidget(
+      MoneyFlowApp(
+        transactionRepository: transactionRepository,
+        categoryRepository: categoryRepository,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppStrings.settings));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(AppStrings.darkMode));
+    await tester.pumpAndSettle();
+
+    final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(materialApp.themeMode, ThemeMode.dark);
   });
 }
 

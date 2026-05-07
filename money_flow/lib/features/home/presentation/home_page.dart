@@ -3,6 +3,7 @@ import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/theme/app_radii.dart';
 import 'package:money_flow/core/theme/app_spacing.dart';
 import 'package:money_flow/core/utils/money_formatter.dart';
+import 'package:money_flow/core/widgets/month_selector.dart';
 import 'package:money_flow/features/category/domain/category.dart';
 import 'package:money_flow/features/category/domain/category_lookup.dart';
 import 'package:money_flow/features/transaction/domain/transaction.dart';
@@ -14,12 +15,18 @@ class HomePage extends StatelessWidget {
     required this.transactions,
     required this.categories,
     required this.isLoading,
+    required this.selectedMonth,
+    required this.onPreviousMonth,
+    required this.onNextMonth,
     super.key,
   });
 
   final List<Transaction> transactions;
   final List<Category> categories;
   final bool isLoading;
+  final DateTime selectedMonth;
+  final VoidCallback onPreviousMonth;
+  final VoidCallback onNextMonth;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +45,12 @@ class HomePage extends StatelessWidget {
             style: textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          MonthSelector(
+            month: selectedMonth,
+            onPreviousMonth: onPreviousMonth,
+            onNextMonth: onNextMonth,
           ),
           const SizedBox(height: AppSpacing.lg),
           DecoratedBox(

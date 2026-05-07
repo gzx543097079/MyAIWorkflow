@@ -19,4 +19,20 @@ class AppTheme {
       ),
     );
   }
+
+  static ThemeData get dark {
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primarySeed,
+        brightness: Brightness.dark,
+      ),
+      scaffoldBackgroundColor: AppColors.darkPageBackground,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.darkPageBackground,
+        centerTitle: false,
+        elevation: 0,
+      ),
+    );
+  }
 }

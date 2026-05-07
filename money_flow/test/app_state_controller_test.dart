@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:money_flow/core/constants/app_strings.dart';
 import 'package:money_flow/core/state/app_state_controller.dart';
 import 'package:money_flow/features/category/data/category_repository.dart';
 import 'package:money_flow/features/category/data/default_categories.dart';
@@ -86,6 +88,51 @@ void main() {
 
     expect(controller.categories, defaultCategories);
   });
+
+  test('filters visible transactions by selected month', () async {
+    await controller.load();
+
+    expect(
+      controller.selectedMonthTransactions.every(
+        (transaction) => transaction.date.month == DateTime.now().month,
+      ),
+      true,
+    );
+
+    controller.previousMonth();
+
+    expect(
+      controller.selectedMonthTransactions.every(
+        (transaction) => transaction.date.month == DateTime.now().month - 1,
+      ),
+      true,
+    );
+  });
+
+  test('toggles dark mode without widget state', () {
+    expect(controller.themeMode, ThemeMode.light);
+
+    controller.setDarkMode(true);
+
+    expect(controller.themeMode, ThemeMode.dark);
+    expect(controller.isDarkMode, true);
+  });
+
+  test('captures repository failures as user-facing errors', () async {
+    controller.dispose();
+    controller = AppStateController(
+      transactionRepository: _FailingTransactionRepository(),
+      categoryRepository: categoryRepository,
+    );
+
+    await controller.load();
+
+    expect(controller.errorMessage, AppStrings.loadFailed);
+
+    controller.clearError();
+
+    expect(controller.errorMessage, isNull);
+  });
 }
 
 class _MemoryTransactionRepository implements TransactionRepository {
@@ -108,6 +155,23 @@ class _MemoryTransactionRepository implements TransactionRepository {
   @override
   Future<void> saveTransaction(Transaction transaction) async {
     transactions.add(transaction);
+  }
+}
+
+class _FailingTransactionRepository implements TransactionRepository {
+  @override
+  Future<void> deleteTransaction(String id) async {
+    throw StateError('delete failed');
+  }
+
+  @override
+  Future<List<Transaction>> loadTransactions() async {
+    throw StateError('load failed');
+  }
+
+  @override
+  Future<void> saveTransaction(Transaction transaction) async {
+    throw StateError('save failed');
   }
 }
 

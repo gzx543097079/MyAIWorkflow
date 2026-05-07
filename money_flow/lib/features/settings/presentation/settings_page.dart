@@ -9,6 +9,8 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage({
     required this.categories,
     required this.isLoadingCategories,
+    required this.isDarkMode,
+    required this.onDarkModeChanged,
     required this.onSaveCategory,
     required this.onDeleteCategory,
     super.key,
@@ -16,6 +18,8 @@ class SettingsPage extends StatelessWidget {
 
   final List<Category> categories;
   final bool isLoadingCategories;
+  final bool isDarkMode;
+  final ValueChanged<bool> onDarkModeChanged;
   final Future<void> Function(Category category) onSaveCategory;
   final Future<void> Function(String id) onDeleteCategory;
 
@@ -34,19 +38,26 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          const _SettingsGroup(
+          _SettingsGroup(
             children: [
-              _SettingsTile(
+              const _SettingsTile(
                 icon: Icons.account_circle_outlined,
                 title: AppStrings.accountSettings,
                 subtitle: AppStrings.localLedger,
               ),
-              _SettingsTile(
+              SwitchListTile(
+                secondary: const Icon(Icons.dark_mode_outlined),
+                title: const Text(AppStrings.darkMode),
+                subtitle: const Text(AppStrings.appearanceSettings),
+                value: isDarkMode,
+                onChanged: onDarkModeChanged,
+              ),
+              const _SettingsTile(
                 icon: Icons.storage_outlined,
                 title: AppStrings.dataSettings,
                 subtitle: AppStrings.localStorageEnabled,
               ),
-              _SettingsTile(
+              const _SettingsTile(
                 icon: Icons.info_outline,
                 title: AppStrings.appVersion,
                 subtitle: AppStrings.versionName,
@@ -210,7 +221,11 @@ class _CategorySettings extends StatelessWidget {
     if (result == null) {
       return;
     }
-    await onSaveCategory(result);
+    try {
+      await onSaveCategory(result);
+    } catch (_) {
+      return;
+    }
   }
 
   Future<void> _confirmDelete(BuildContext context, Category category) async {
@@ -249,7 +264,11 @@ class _CategorySettings extends StatelessWidget {
     );
 
     if (shouldDelete ?? false) {
-      await onDeleteCategory(category.id);
+      try {
+        await onDeleteCategory(category.id);
+      } catch (_) {
+        return;
+      }
     }
   }
 }
