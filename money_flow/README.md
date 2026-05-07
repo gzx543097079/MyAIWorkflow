@@ -1,17 +1,31 @@
-# money_flow
+# MoneyFlow
 
-A new Flutter project.
+MoneyFlow 是一个本地优先的个人记账 Flutter App。
 
-## Getting Started
+## V1.0 发布候选功能
 
-This project is a starting point for a Flutter application.
+- 新增收入和支出记录。
+- 删除交易记录。
+- 按月份查看首页汇总、明细和统计。
+- 管理收入和支出分类。
+- 查看月度收入、支出、结余、分类支出和每日支出趋势。
+- 支持深色模式。
+- 本地错误提示、空状态和删除确认。
 
-A few resources to get you started if this is your first Flutter project:
+## 本地数据
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- 交易记录使用 Hive 存储在本机。
+- 分类数据使用 Hive 存储在本机。
+- 当前版本不包含登录、云同步、订阅或远程备份。
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 已知限制
+
+- 暂不支持编辑交易记录。
+- 暂不支持导入、导出或云端同步。
+- 当前是发布候选版本，正式发布前仍需在目标真机上做最终回归。
+
+## 下一版本方向
+
+- 发布前打磨和真实设备验证。
+- 数据备份、导出或迁移能力。
+- 更完整的筛选和记录编辑流程。

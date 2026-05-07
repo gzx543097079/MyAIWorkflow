@@ -56,7 +56,7 @@ class AppStrings {
   static const emptyCategoryMessage = '当前没有分类，可以新增收入或支出分类。';
   static const dataSettings = '数据设置';
   static const appVersion = '版本';
-  static const versionName = 'V0.9 体验优化版';
+  static const versionName = 'V1.0 发布候选版';
   static const appearanceSettings = '外观设置';
   static const darkMode = '深色模式';
   static const localLedger = '本地账本';
